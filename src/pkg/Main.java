@@ -13,10 +13,9 @@ public class Main extends PApplet{
     public static File imgDir = new File("imgs");
     List<Image> images = new ArrayList<>();
 
-    private static final boolean showFPS = true;
+    private static final boolean showFPS = false;
 
     Thread loaderThread;
-
     View view;
 
     float animIndex = 0;

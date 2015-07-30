@@ -46,30 +46,9 @@ public class Slideshow extends View{
         pg.beginDraw();//start draw
         pg.background(0);
 
-        PGraphics ci = imgs.get(index).getImage();
+        PGraphics ci = imgs.get(index).getImage(pa.width, pa.height);
 
-
-        //Scale image to fit window
-        float imgWidth, imgHeight;
-        float wRatio = (float) ci.width / (float) pa.width;
-        float hRatio = (float) ci.height / (float) pa.height;
-
-        if(wRatio > hRatio){
-            imgHeight =  (ci.height/wRatio);
-            imgWidth =   pa.width;
-        }else{
-            imgWidth =  (ci.width / hRatio);
-            imgHeight = (pa.height);
-        }
-
-        pg.imageMode(PConstants.CENTER);
-        pg.image(
-                ci,
-                pa.width/2,
-                pa.height/2,
-                imgWidth,
-                imgHeight
-        );
+        pg.image(ci, 0, 0);
 
         //TODO filters & stuff
 

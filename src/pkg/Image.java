@@ -5,7 +5,6 @@ import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +19,7 @@ public class Image {
     List<Tint> tints = new ArrayList<>();
 
     boolean isCached = false;
-
+    float pWidth, pHeight;
 
     /**
      * Creates a new image with the specified image location and PApplet.
@@ -38,13 +37,17 @@ public class Image {
      * filters or adjustments.
      *
      * @return PGraphics with image drawn to it.
+     * @param width width of the container to draw the image to
+     * @param height height of the container to draw the image to
      */
-    public PGraphics getImage(){
+    public PGraphics getImage(float width, float height){
+        if(width != pWidth || height != pHeight){isCached = false;} //break cache if image changes dims.
+
         if(isCached){
-            return pg;
-        } else {
+            return pg; //if we have a cached copy, just use it.
+        } else { //if not, start over
             //load and initialize image
-            pg = pa.createGraphics(img.width, img.height);
+            pg = pa.createGraphics((int)width, (int)height);
             pg.beginDraw();
 
             //apply tints to PGraphics - can only come before image
@@ -52,8 +55,22 @@ public class Image {
                 pg.tint(t.r, t.b, t.g);
             }
 
+            //Scale image to fit window
+            float imgWidth, imgHeight;
+            float wRatio = (float) img.width / (float) pg.width;
+            float hRatio = (float) img.height / (float) pg.height;
+
+            if(wRatio > hRatio){
+                imgHeight =  (img.height/wRatio);
+                imgWidth =   pg.width;
+            }else{
+                imgWidth =  (img.width / hRatio);
+                imgHeight = (pg.height);
+            }
+
             //Draws image
-            pg.image(img, 0, 0);
+            pg.imageMode(PConstants.CENTER);
+            pg.image(img, pg.width/2, pg.height/2, imgWidth, imgHeight);
 
             //apply filters to PGraphics - can only come after
             for (Filter f : filters) {
@@ -66,9 +83,13 @@ public class Image {
 
             pg.endDraw();
             isCached = true;
+            pWidth = width;
+            pHeight = height;
             return pg;
         }
     }
+
+    public PGraphics getImage(){return getImage(pa.width, pa.height);}
 
     /**
      * Adds a tint to the image.
