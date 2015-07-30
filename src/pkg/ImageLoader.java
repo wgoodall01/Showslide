@@ -24,6 +24,9 @@ public class ImageLoader implements Runnable{
     @Override
     public void run() {
         loadImagesInDir(dir);
+
+        System.out.println("Done loading images");
+
     }
 
     private void loadImagesInDir(File dir){
