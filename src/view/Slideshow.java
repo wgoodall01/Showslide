@@ -13,7 +13,8 @@ public class Slideshow extends View{
 
     //List<Image> imgs, PApplet pa inherited
     int index = 0;
-    boolean pMousePressed;
+    boolean pMousePressed = false;
+    boolean pKeyPressed = false;
     PShape arrow;
 
 
@@ -47,6 +48,8 @@ public class Slideshow extends View{
 
         PGraphics ci = imgs.get(index).getImage();
 
+
+        //Scale image to fit window
         float imgWidth, imgHeight;
         float wRatio = (float) ci.width / (float) pa.width;
         float hRatio = (float) ci.height / (float) pa.height;
@@ -71,65 +74,82 @@ public class Slideshow extends View{
         //TODO filters & stuff
 
         //draw arrows
-        leftArrow(pg);
-        rightArrow(pg);
+        drawArrow(pg, true);
+        drawArrow(pg, false);
+
+        checkInterface();
 
         pg.endDraw();//end draw
-
-        //update pMousePressed
-        pMousePressed = pa.mousePressed;
 
         return pg;
     }
 
+    /**
+     * Checks whether any buttons have been clicked, keys pressed, etc.
+     * Called every frame.
+     */
+    private void checkInterface(){
 
-    private void leftArrow(PGraphics pg){
-        pg.pushStyle();
-        if(pa.mouseX < 55){ //if mouse is on arrow
-
-            //set formatting
-            pg.fill(150, 150, 150, 150);
-            pg.noStroke();
-
-            //draw highlight
-            pg.rect(0, 0, 55, pa.height);
-
-            //if mouse is clicked
-            if(pa.mousePressed && !pMousePressed){
-                if(imgs.size() -1 == index){
-                    index=0; //loop back around
-                }else{
-                    index++; //increment by 1
-                }
+        //check for mouse pressed
+        if(pa.mousePressed && !pMousePressed){
+            if(pa.mouseX < 55){ //on left arrow
+                incrementSlideshow(-1);
+            }
+            if(pa.mouseX > pa.width - 55){ //on right arrow
+                incrementSlideshow(1);
             }
         }
-        pg.shape(arrow, 20, pa.height/2 - 25,  25, 50);
-        pg.noTint();
-        pg.popStyle();
+
+        //check for key pressed
+        if(pa.keyPressed && !pKeyPressed){
+            if(pa.keyCode == PConstants.LEFT){ //left arrow key
+                incrementSlideshow(-1);
+            }
+            if(pa.keyCode == PConstants.RIGHT){ //right arrow key
+                incrementSlideshow(1);
+            }
+            if(pa.keyCode == PConstants.DOWN){
+                index = 0;
+            }
+            if(pa.keyCode == PConstants.UP){
+                index = imgs.size() -1;
+            }
+        }
+
+
+        pMousePressed = pa.mousePressed;
+        pKeyPressed = pa.keyPressed;
     }
 
-    private void rightArrow(PGraphics pg) {
+    /**
+     * Increments the slideshow by the specified amount, looping back to the start if it reaches the end.
+     * @param i amount to increment by.
+     */
+    private void incrementSlideshow(int i){
+        index += i;
+        if(index < 0) index =  index + imgs.size();
+        else if(index >= imgs.size()) index =  index % imgs.size();
+    }
+
+    /**
+     * Draws an arrow to the screen, and highlights it if the mouse is over it.
+     * @param pg PGraphics object to draw arrows to
+     * @param isLeftSide True if the arrow is on the left side, false if it's on the right.
+     */
+    private void drawArrow(PGraphics pg, boolean isLeftSide) {
         pg.pushStyle();
-        if(pa.mouseX > pa.width - 55){ //If mouse is on arrow
 
-            //set formatting
-            pg.fill(150, 150, 150, 150);
-            pg.noStroke();
+        //draw arrow
+        float aXPos  = isLeftSide ? 20 : pa.width - 20;
+        float aWidth = isLeftSide ? 25 : -25;
+        pg.shape(arrow, aXPos, pa.height/2 - 25, aWidth, 50);
 
-            //draw highlight
-            pg.rect(pa.width - 55, 0, pa.width, pa.height);
+        //draw highlight
+        pg.fill(200, 50);
+        pg.noStroke();
+        float hXPos = isLeftSide ? 0 : pa.width-55;
+        pg.rect(hXPos, 0, 55, pa.height);
 
-            //if mouse is pressed
-            if(pa.mousePressed && !pMousePressed){
-                if(index == 0){
-                    index = imgs.size()-1; //loop back around
-                }else{
-                    index--; //increment
-                }
-            }
-        }
-        pg.shape(arrow, pa.width - 20, pa.height/2 - 25, -25, 50);
-        pa.noTint();
         pg.popStyle();
     }
 }
