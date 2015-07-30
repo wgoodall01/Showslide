@@ -19,6 +19,9 @@ public class Image {
     List<Filter> filters = new ArrayList<>();
     List<Tint> tints = new ArrayList<>();
 
+    boolean isCached = false;
+
+
     /**
      * Creates a new image with the specified image location and PApplet.
      * @param imgPath the path of the desired image
@@ -37,26 +40,34 @@ public class Image {
      * @return PGraphics with image drawn to it.
      */
     public PGraphics getImage(){
-        //load and initialize image
-        PGraphics pg = pa.createGraphics(img.width, img.height);
-        pg.beginDraw();
+        if(isCached){
+            return pg;
+        } else {
+            //load and initialize image
+            pg = pa.createGraphics(img.width, img.height);
+            pg.beginDraw();
 
-        //apply tints to PGraphics - can only come before image
-        for(Tint t : tints){
-            pg.tint(t.r, t.b, t.g);
+            //apply tints to PGraphics - can only come before image
+            for (Tint t : tints) {
+                pg.tint(t.r, t.b, t.g);
+            }
+
+            //Draws image
+            pg.image(img, 0, 0);
+
+            //apply filters to PGraphics - can only come after
+            for (Filter f : filters) {
+                if (f.filterType == PConstants.GRAY) {
+                    pg.filter(PConstants.GRAY);
+                } else {
+                    pg.filter(f.filterType, f.param);
+                }
+            }
+
+            pg.endDraw();
+            isCached = true;
+            return pg;
         }
-
-        //Draws image
-        pg.image(img, 0, 0);
-
-        //apply filters to PGraphics - can only come after
-        for(Filter f : filters){
-            if(f.filterType == PConstants.GRAY){pg.filter(PConstants.GRAY);}
-            else{pg.filter(f.filterType, f.param);}
-        }
-
-        pg.endDraw();
-        return pg;
     }
 
     /**
@@ -67,6 +78,7 @@ public class Image {
      */
     public void addTint(float r, float g, float b){
         tints.add(new Tint(r, g, b));
+        isCached = false;
     }
 
     /**
@@ -76,6 +88,7 @@ public class Image {
      */
     public void addFilter(int filterType, float param){
         filters.add(new Filter(filterType, param));
+        isCached = false;
     }
 
     private class Filter{
