@@ -1,8 +1,7 @@
 package pkg;
 
 import processing.core.*;
-import view.Slideshow;
-import view.View;
+import view.*;
 
 import javax.swing.*;
 import java.io.File;
@@ -23,7 +22,6 @@ public class Main extends PApplet{
     public void setup(){
         size(500, 500);
         frameRate(120);
-
         System.out.println("Application started.");
 
         //make window resizable if running as an app
@@ -41,13 +39,18 @@ public class Main extends PApplet{
         println("Started image loader thread");
 
         //setup slideshow view
-        view = new Slideshow(images, this);
+        view = new Gallery(images, this);
     }
+
 
     public void draw(){
         if(!loaderThread.isAlive()){ //Images are loaded and ready
             imageMode(CORNER);
-            image(view.getView(), 0, 0, width, height);
+
+            view = view.getNewView();
+
+            image(view.getViewport(), 0, 0, width, height);
+
             if(showFPS) {
                 pushStyle();
                 strokeWeight(5);

@@ -20,6 +20,7 @@ public class Image {
 
     boolean isCached = false;
     float pWidth, pHeight;
+    boolean pThumb = false;
 
     /**
      * Creates a new image with the specified image location and PApplet.
@@ -40,8 +41,9 @@ public class Image {
      * @param width width of the container to draw the image to
      * @param height height of the container to draw the image to
      */
-    public PGraphics getImage(float width, float height){
-        if(width != pWidth || height != pHeight){isCached = false;} //break cache if image changes dims.
+    public PGraphics getImage(float width, float height, boolean isThumb){
+        //break cache if anything changes
+        if(width != pWidth || height != pHeight || isThumb != pThumb){isCached = false;}
 
         if(isCached){
             return pg; //if we have a cached copy, just use it.
@@ -60,7 +62,9 @@ public class Image {
             float wRatio = (float) img.width / (float) pg.width;
             float hRatio = (float) img.height / (float) pg.height;
 
-            if(wRatio > hRatio){
+            boolean comp = isThumb ? wRatio < hRatio : wRatio > hRatio;
+
+            if(comp){
                 imgHeight =  (img.height/wRatio);
                 imgWidth =   pg.width;
             }else{
@@ -85,10 +89,11 @@ public class Image {
             isCached = true;
             pWidth = width;
             pHeight = height;
+            pThumb = isThumb;
             return pg;
         }
     }
-
+    public PGraphics getImage(float width, float height){return getImage(width, height, false);}
     public PGraphics getImage(){return getImage(pa.width, pa.height);}
 
     /**

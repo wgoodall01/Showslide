@@ -20,8 +20,8 @@ public abstract class View {
      * Called every frame, similar to draw() except it draws to a PGraphics object which it then returns.
      * @return PGraphics object containing the frame.
      */
-    public abstract PGraphics getView();
+    public abstract PGraphics getViewport();
 
 
-
+    public abstract View getNewView();
 }

@@ -17,6 +17,8 @@ public class Slideshow extends View{
     boolean pKeyPressed = false;
     PShape arrow;
 
+    private boolean exit = false;
+
 
     /**
      * Creates a slideshow with the selected images and PApplet.
@@ -40,7 +42,7 @@ public class Slideshow extends View{
     }
 
     @Override
-    public PGraphics getView() {
+    public PGraphics getViewport() {
         PGraphics pg = pa.createGraphics(pa.width, pa.height);
 
         pg.beginDraw();//start draw
@@ -61,6 +63,15 @@ public class Slideshow extends View{
         pg.endDraw();//end draw
 
         return pg;
+    }
+
+    @Override
+    public View getNewView() {
+        if(exit){
+            return new Gallery(imgs, pa);
+        }else{
+            return this;
+        }
     }
 
     /**
@@ -92,6 +103,10 @@ public class Slideshow extends View{
             }
             if(pa.keyCode == PConstants.UP){
                 index = imgs.size() -1;
+            }
+
+            if(pa.key == 'x'){
+                exit = true;
             }
         }
 
@@ -127,7 +142,6 @@ public class Slideshow extends View{
         pg.fill(200, 50);
         pg.noStroke();
         float hXPos = isLeftSide ? 0 : pa.width-55;
-        pg.rect(hXPos, 0, 55, pa.height);
 
         pg.popStyle();
     }
