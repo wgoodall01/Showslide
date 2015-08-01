@@ -9,18 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Image {
+    private final PApplet pa;
 
-    public final String imgPath;
-    private PApplet pa;
+    private PGraphics pg;
+    private final PImage img;
+    private final List<Filter> filters = new ArrayList<>();
+    private final List<Tint> tints = new ArrayList<>();
 
-    PGraphics pg;
-    PImage img;
-    List<Filter> filters = new ArrayList<>();
-    List<Tint> tints = new ArrayList<>();
-
-    boolean isCached = false;
-    float pWidth, pHeight;
-    boolean pThumb = false;
+    private boolean isCached = false;
+    private float pWidth, pHeight;
+    private boolean pThumb = false;
 
     /**
      * Creates a new image with the specified image location and PApplet.
@@ -28,7 +26,6 @@ public class Image {
      * @param pa the PApplet to draw on
      */
     public Image(String imgPath, PApplet pa){
-        this.imgPath = imgPath;
         this.pa = pa;
         img = pa.loadImage(imgPath);
     }
@@ -94,7 +91,6 @@ public class Image {
         }
     }
     public PGraphics getImage(float width, float height){return getImage(width, height, false);}
-    public PGraphics getImage(){return getImage(pa.width, pa.height);}
 
     /**
      * Adds a tint to the image.
@@ -103,6 +99,7 @@ public class Image {
      * @param b Green value for tint
      */
     public void addTint(float r, float g, float b){
+        //add tint, break cache
         tints.add(new Tint(r, g, b));
         isCached = false;
     }
@@ -113,21 +110,29 @@ public class Image {
      * @param param Filter parameter
      */
     public void addFilter(int filterType, float param){
+        //add filter, break cache
         filters.add(new Filter(filterType, param));
         isCached = false;
     }
 
+    /**
+     * Class representing a Filter. Immutable.
+     */
     private class Filter{
-        public int filterType;
-        public float param;
+        public final int filterType;
+        public final float param;
 
         public Filter(int filterType, float param){
             this.filterType = filterType;
             this.param = param;
         }
     }
+
+    /**
+     * Class representing a Tint. Immutable.
+     */
     private class Tint{
-        float r, g, b;
+        final float r, g, b;
 
         public Tint(float r, float g, float b){
             this.r = r;

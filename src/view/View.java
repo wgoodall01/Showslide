@@ -22,6 +22,10 @@ public abstract class View {
      */
     public abstract PGraphics getViewport();
 
-
+    /**
+     * Called every frame. Main will display the view returned from this method.
+     * To keep the view unchanged, return self.
+     * @return View to display next frame
+     */
     public abstract View getNewView();
 }

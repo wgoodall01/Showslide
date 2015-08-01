@@ -9,17 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main extends PApplet{
-    public static File imgDir = new File("imgs");
-    List<Image> images = new ArrayList<>();
+    private static File imgDir = new File("imgs");
+    private final List<Image> images = new ArrayList<>();
 
     private static final boolean showFPS = false;
 
-    Thread loaderThread;
-    View view;
+    private Thread loaderThread;
+    private View view;
 
-    float animIndex = 0;
+    private float animIndex = 0;
 
     public void setup(){
+        //config processing
         size(500, 500);
         frameRate(120);
         System.out.println("Application started.");
@@ -28,6 +29,7 @@ public class Main extends PApplet{
         if (frame != null) {
             frame.setResizable(true);
         }
+
         //choose folder
         chooseFolder();
         println("Folder: " + imgDir.getPath());
@@ -45,13 +47,14 @@ public class Main extends PApplet{
 
     public void draw(){
         if(!loaderThread.isAlive()){ //Images are loaded and ready
-            imageMode(CORNER);
-
+            //get new view if there is one
             view = view.getNewView();
 
+            //draw View to the screen
+            imageMode(CORNER);
             image(view.getViewport(), 0, 0, width, height);
 
-            if(showFPS) {
+            if(showFPS) { //show fps bar if enabled
                 pushStyle();
                 strokeWeight(5);
                 stroke(200);
@@ -60,7 +63,7 @@ public class Main extends PApplet{
                 text(frameRate, 0, 0);
                 popStyle();
             }
-        }else{ //Images are being loaded
+        }else{ //Images are being loaded, display loading bloop
             pushStyle();
             background(0, 200, 200);
             noStroke();
@@ -74,11 +77,16 @@ public class Main extends PApplet{
         }
     }
 
+    /**
+     * Prompts the user for a file, and sets imgDir to the result if the result is OK
+     */
     private void chooseFolder(){
+        //configure JFileChooser
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int returnVal = fileChooser.showOpenDialog(frame);
 
+        //If OK, set the image
         if(returnVal == JFileChooser.APPROVE_OPTION){ //set file dir if they approve it
             imgDir = fileChooser.getSelectedFile();
         }

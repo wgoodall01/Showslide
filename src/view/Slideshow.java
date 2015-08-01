@@ -9,13 +9,13 @@ import processing.core.PShape;
 import java.util.List;
 
 
-public class Slideshow extends View{
+class Slideshow extends View{
 
     //List<Image> imgs, PApplet pa inherited
-    int index = 0;
-    boolean pMousePressed = false;
-    boolean pKeyPressed = false;
-    PShape arrow;
+    private int index = 0;
+    private boolean pMousePressed = false;
+    private boolean pKeyPressed = false;
+    private final PShape arrow;
 
     private boolean exit = false;
 
@@ -48,11 +48,11 @@ public class Slideshow extends View{
         pg.beginDraw();//start draw
         pg.background(0);
 
+        //get current image and draw it
         PGraphics ci = imgs.get(index).getImage(pa.width, pa.height);
-
         pg.image(ci, 0, 0);
 
-        //TODO filters & stuff
+        //TODO add filters & stuff
 
         //draw arrows
         drawArrow(pg, true);
@@ -137,11 +137,6 @@ public class Slideshow extends View{
         float aXPos  = isLeftSide ? 20 : pa.width - 20;
         float aWidth = isLeftSide ? 25 : -25;
         pg.shape(arrow, aXPos, pa.height/2 - 25, aWidth, 50);
-
-        //draw highlight
-        pg.fill(200, 50);
-        pg.noStroke();
-        float hXPos = isLeftSide ? 0 : pa.width-55;
 
         pg.popStyle();
     }
