@@ -95,7 +95,7 @@ public class Gallery extends View {
                 if(i < imgs.size()-1) {
                     if(pa.mouseY - scroll > y && pa.mouseY - scroll < y+thumbSize &&
                        pa.mouseX > x && pa.mouseX < x + thumbSize){
-                        //if hivering over a thumb @ x, y
+                        //if hovering over a thumb @ x, y
 
                         strip.pushStyle();
                         strip.strokeWeight(2);
