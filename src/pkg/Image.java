@@ -5,20 +5,22 @@ import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Image {
-    private final PApplet pa;
+    public static final int defaultTint = 255;
+    public static final int defaultBlur = 0;
 
+    private final PApplet pa;
     private PGraphics pg;
     private final PImage img;
-    private final List<Filter> filters = new ArrayList<>();
-    private final List<Tint> tints = new ArrayList<>();
+    private int r, g, b; //filter values
+
+    private int blur; //blur amt
 
     private boolean isCached = false;
     private float pWidth, pHeight;
     private boolean pThumb = false;
+
+
 
     /**
      * Creates a new image with the specified image location and PApplet.
@@ -28,6 +30,10 @@ public class Image {
     public Image(String imgPath, PApplet pa){
         this.pa = pa;
         img = pa.loadImage(imgPath);
+
+        //init tints to nothing
+        r = g = b = defaultTint;
+        blur = defaultBlur;
     }
 
     /**
@@ -49,10 +55,8 @@ public class Image {
             pg = pa.createGraphics((int)width, (int)height);
             pg.beginDraw();
 
-            //apply tints to PGraphics - can only come before image
-            for (Tint t : tints) {
-                pg.tint(t.r, t.b, t.g);
-            }
+            //apply filter to PGraphics - can only come before image
+            pg.tint(r, b, g);
 
             //Scale image to fit window
             float imgWidth, imgHeight;
@@ -73,14 +77,8 @@ public class Image {
             pg.imageMode(PConstants.CENTER);
             pg.image(img, pg.width/2, pg.height/2, imgWidth, imgHeight);
 
-            //apply filters to PGraphics - can only come after
-            for (Filter f : filters) {
-                if (f.filterType == PConstants.GRAY) {
-                    pg.filter(PConstants.GRAY);
-                } else {
-                    pg.filter(f.filterType, f.param);
-                }
-            }
+            //adds blur
+            pg.filter(PConstants.BLUR, blur);
 
             pg.endDraw();
             isCached = true;
@@ -92,53 +90,31 @@ public class Image {
     }
     public PGraphics getImage(float width, float height){return getImage(width, height, false);}
 
-    /**
-     * Adds a tint to the image.
-     * @param r Red value for tint
-     * @param g Blue value for tint
-     * @param b Green value for tint
-     */
-    public void addTint(float r, float g, float b){
-        //add tint, break cache
-        tints.add(new Tint(r, g, b));
+    //R, G, B, getters and setters
+    public int getR() {return r;}
+    public void setR(int r) {
         isCached = false;
+        this.r = r;
     }
 
-    /**
-     * Adds a filter to the image.
-     * @param filterType Type of filter, e.g. PConstants.GRAY
-     * @param param Filter parameter
-     */
-    public void addFilter(int filterType, float param){
-        //add filter, break cache
-        filters.add(new Filter(filterType, param));
+    public int getG() {return g;}
+    public void setG(int g) {
         isCached = false;
+        this.g = g;
     }
 
-    /**
-     * Class representing a Filter. Immutable.
-     */
-    private class Filter{
-        public final int filterType;
-        public final float param;
-
-        public Filter(int filterType, float param){
-            this.filterType = filterType;
-            this.param = param;
-        }
+    public int getB() {return b;}
+    public void setB(int b) {
+        isCached = false;
+        this.b = b;
     }
 
-    /**
-     * Class representing a Tint. Immutable.
-     */
-    private class Tint{
-        final float r, g, b;
 
-        public Tint(float r, float g, float b){
-            this.r = r;
-            this.b = b;
-            this.g = g;
-        }
+    public int getBlur() {return blur;}
+
+    public void setBlur(int blur) {
+        isCached =  false;
+        this.blur = blur;
     }
 
 }

@@ -1,6 +1,7 @@
 package view;
 
 import pkg.Image;
+import pkg.FilterAdder;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -51,8 +52,6 @@ class Slideshow extends View{
         //get current image and draw it
         PGraphics ci = imgs.get(index).getImage(pa.width, pa.height);
         pg.image(ci, 0, 0);
-
-        //TODO add filters & stuff
 
         //draw arrows
         drawArrow(pg, true);
@@ -107,6 +106,10 @@ class Slideshow extends View{
 
             if(pa.key == 'x'){
                 exit = true;
+            }
+
+            if(pa.key == 'f'){
+                new FilterAdder(imgs.get(index));
             }
         }
 
