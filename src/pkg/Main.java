@@ -8,6 +8,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Main class. This displays the current View to the screen, and loads images.
+ */
 public class Main extends PApplet{
     private static File imgDir = new File("imgs");
     private final List<Image> images = new ArrayList<>();
@@ -23,6 +26,7 @@ public class Main extends PApplet{
         //config processing
         size(500, 500);
         frameRate(120);
+        imageMode(CORNER);
         System.out.println("Application started.");
 
         //make window resizable if running as an app
@@ -51,7 +55,6 @@ public class Main extends PApplet{
             view = view.getNewView();
 
             //draw View to the screen
-            imageMode(CORNER);
             image(view.getViewport(), 0, 0, width, height);
 
             if(showFPS) { //show fps bar if enabled
@@ -71,6 +74,7 @@ public class Main extends PApplet{
             ellipse(width/2, height/2, radius, radius);
             animIndex += 0.01;
 
+            //display loading text
             textSize(20);
             text("Loading Images...", 10, height - 10);
             popStyle();
@@ -84,7 +88,7 @@ public class Main extends PApplet{
         //configure JFileChooser
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int returnVal = fileChooser.showOpenDialog(frame);
+        int returnVal = fileChooser.showOpenDialog(null);
 
         //If OK, set the image
         if(returnVal == JFileChooser.APPROVE_OPTION){ //set file dir if they approve it

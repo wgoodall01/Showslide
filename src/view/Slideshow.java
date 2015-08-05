@@ -9,7 +9,11 @@ import processing.core.PShape;
 
 import java.util.List;
 
-
+/**
+ * A slideshow, displaying images one by one.
+ *
+ * @author William Goodall
+ */
 class Slideshow extends View{
 
     //List<Image> imgs, PApplet pa inherited

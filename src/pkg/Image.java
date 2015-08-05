@@ -5,8 +5,21 @@ import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
 
+
+/**
+ * Represents an image, and is responsible for loading it and writing it, with filters, to a buffer.
+ *
+ * @author William Goodall
+ */
 public class Image {
+    /**
+     * By default, all images will have this tint across r, g, and b;
+     */
     public static final int defaultTint = 255;
+
+    /**
+     * By default, all images will have this amount of blur
+     */
     public static final int defaultBlur = 0;
 
     private final PApplet pa;
@@ -31,7 +44,7 @@ public class Image {
         this.pa = pa;
         img = pa.loadImage(imgPath);
 
-        //init tints to nothing
+        //init tints and blur to default
         r = g = b = defaultTint;
         blur = defaultBlur;
     }
@@ -45,7 +58,7 @@ public class Image {
      * @param height height of the container to draw the image to
      */
     public PGraphics getImage(float width, float height, boolean isThumb){
-        //break cache if anything changes
+        //break cache if anything changed
         if(width != pWidth || height != pHeight || isThumb != pThumb){isCached = false;}
 
         if(isCached){
@@ -63,14 +76,15 @@ public class Image {
             float wRatio = (float) img.width / (float) pg.width;
             float hRatio = (float) img.height / (float) pg.height;
 
+            //Decides how to scale - e.g. whether to fill the bounding box or fit in it.
             boolean comp = isThumb ? wRatio < hRatio : wRatio > hRatio;
 
             if(comp){
-                imgHeight =  (img.height/wRatio);
-                imgWidth =   pg.width;
+                imgHeight = (img.height/wRatio);
+                imgWidth = pg.width;
             }else{
-                imgWidth =  (img.width / hRatio);
-                imgHeight = (pg.height);
+                imgWidth = (img.width / hRatio);
+                imgHeight = pg.height;
             }
 
             //Draws image
@@ -81,6 +95,8 @@ public class Image {
             pg.filter(PConstants.BLUR, blur);
 
             pg.endDraw();
+
+            //set cache values
             isCached = true;
             pWidth = width;
             pHeight = height;

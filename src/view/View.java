@@ -6,11 +6,20 @@ import processing.core.PGraphics;
 
 import java.util.List;
 
-
+/**
+ * Defines how other classes may implement View to be drawn to the screen by Main.
+ *
+ * @author William Goodall
+ */
 public abstract class View {
     List<Image> imgs;
     PApplet pa;
 
+    /**
+     * Creates a new view, using the specified PApplet and images to display.
+     * @param imgs Images to display
+     * @param   pa PApplet
+     */
     public View(List<Image> imgs, PApplet pa){
         this.imgs = imgs;
         this.pa = pa;

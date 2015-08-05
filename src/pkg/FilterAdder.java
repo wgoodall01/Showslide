@@ -1,6 +1,11 @@
 package pkg;
 import javax.swing.*;
 
+/**
+ * Dialog box to addjist an Image's filter properties.
+ *
+ * @author William Goodall
+ */
 public class FilterAdder extends JFrame{
     private JLabel l_red;
     private JLabel l_green;
@@ -17,6 +22,11 @@ public class FilterAdder extends JFrame{
 
     private int r, g, b;
 
+    /**
+     * Creates a new FilterAdder dialog, and shows it.
+     * The sliders are bound to properties of the Image.
+     * @param img Image to edit
+     */
     public FilterAdder(Image img){
         super("Add Filter");
 

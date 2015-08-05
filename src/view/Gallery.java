@@ -9,6 +9,12 @@ import java.util.List;
 
 import static java.lang.Math.abs;
 
+
+/**
+ * Displays image thumbnails in a compact grid.
+ *
+ * @author William Goodall
+ */
 public class Gallery extends View {
 
     private final static int thumbSize = 100;
@@ -83,7 +89,7 @@ public class Gallery extends View {
 
     /**
      * Draws a highlight to the image the mouse pointer is over.
-     * If an image is clicked, go to it in the slideshow.
+     * If an image is clicked, go to it in the Slideshow view.
      */
     private void updateHighlights(){
         strip.beginDraw();

@@ -6,6 +6,12 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Runnable in a separate thread, the ImageLoader will recursively
+ * load all images in a directory and every one of its subdirectories.
+ *
+ * @author William Goodall
+ */
 class ImageLoader implements Runnable{
 
     private static final String[] extensions = {"jpg", "jpeg", "png", "gif", "tga"};
@@ -15,17 +21,26 @@ class ImageLoader implements Runnable{
 
     private final List<Image> images;
 
+
+    /**
+     * Creates a new ImageLoader in the specified directory.
+     * @param    dir Directory to load the images from
+     * @param images List to add images to
+     * @param     pa PApplet
+     */
     public ImageLoader(File dir, List<Image> images, PApplet pa){
         this.dir = dir;
         this.images = images;
         this.pa = pa;
     }
 
+    /**
+     * Starts the loader.
+     */
     @Override
     public void run() {
         loadImagesInDir(dir);
         System.out.println("Done loading images");
-
     }
 
     /**
